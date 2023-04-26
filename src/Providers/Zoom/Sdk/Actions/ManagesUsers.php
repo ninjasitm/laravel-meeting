@@ -156,7 +156,7 @@ trait ManagesUsers
      */
     public function userRecordings(string $userId, array $query = []): Repository
     {
-        $request = function ($query, $paginator) use ($userId, $query) {
+        $request = function ($query, $paginator) use ($userId) {
           return $this->transformCollection(
             $this->get("users/{$userId}/recordings?" . http_build_query($query)),
             [CloudRecording::class, 'meetings'],
@@ -175,7 +175,7 @@ trait ManagesUsers
      */
     public function users(array $query = []): Repository
     {
-        $request = function ($query, $paginator) use ($query) {
+        $request = function ($query, $paginator) {
           return $this->transformCollection(
             $this->get("users?" . http_build_query($query)),
             [User::class, 'users'],
