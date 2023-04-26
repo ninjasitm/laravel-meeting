@@ -125,7 +125,7 @@ trait ManagesUsers
      */
     public function userMeetings(string $userId, array $query = []): Repository
     {
-        $request = function ($query, $paginator) use ($userId, $query) {
+        $request = function ($query, $paginator) use ($userId) {
           return $this->transformCollection(
             $this->get("users/{$userId}/meetings?".http_build_query($query)),
             [Meeting::class, 'meetings'],
