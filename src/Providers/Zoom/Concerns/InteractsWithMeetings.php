@@ -196,7 +196,7 @@ trait InteractsWithMeetings
      */
     public function participantAdding(Participant $participant, Meeting $meeting, string $uuid): void
     {
-        $registrant = $this->api->addMeetingParticipant($meeting->meta->zoom_id, [
+        $registrant = $this->api->addMeetingParticipant($meeting->getMetaValue('zoom_id'), [
             'email' => $participant->getParticipantEmailAddress(),
             'first_name' => $participant->getParticipantFirstName(),
             'last_name' => $participant->getParticipantLastName(),

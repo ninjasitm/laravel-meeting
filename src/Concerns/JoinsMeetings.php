@@ -22,6 +22,7 @@ trait JoinsMeetings
     public function meetings(): MorphToMany
     {
         return $this->morphToMany(Meeting::class, 'participant', 'meeting_participants')
+            ->wherePivotNull('deleted_at')
             ->withPivot(['uuid', 'started_at', 'ended_at'])
             ->withTimestamps()
             ->with('scheduler', 'presenter', 'host');

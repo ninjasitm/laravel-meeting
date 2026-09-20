@@ -47,9 +47,22 @@ $meeting = Meeting::schedule()
 
 ## Requirements
 
-This package requires PHP 7.3+ and Laravel 6+.
+The 1.2.0 candidate requires PHP 7.4+ and supports Laravel 6 through 13. CI covers PHP 8.4 with Laravel 10 through 13.
 
-This package uses [`nncodes/meta-attributes`](https://github.com/99codes/laravel-meta-attributes) to attach meta attributes to the models.
+This package uses the personal Meta fork ([`nncodes/meta-attributes`](https://github.com/ninjasitm/laravel-meta-attributes)) (`^2.2`) to attach meta attributes to the models. Because Composer repository declarations do not propagate through dependencies, consumers of this personal-fork candidate must register the Meta VCS repository in their root `composer.json`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ninjasitm/laravel-meta-attributes.git"
+        }
+    ]
+}
+```
+
+CHIP root Composer wiring is tracked separately as T10 and is not part of this package change. Tests fake the provider boundary; they do not use live Zoom credentials or make live HTTP calls.
 
 ## Installation & setup
 
@@ -687,6 +700,10 @@ MeetingRoom::find(1)->isBusyBetween($startTime, $endTime, $except);
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Lifecycle hooks
+
+`starting`, `started`, `ending`, `ended`, `participantJoining`, `participantJoined`, `participantLeaving`, and `participantLeft` remain executable provider hooks. The bundled Zoom provider intentionally performs no remote action and dispatches no additional events from them; the existing scheduled, updated, cancelled, participant-added, and participation-cancelled events are unchanged.
 
 ## Contributing
 

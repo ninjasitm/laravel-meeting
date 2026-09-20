@@ -62,6 +62,20 @@ trait ManipulatesParticipants
         ) {
             throw BusyForTheMeeting::createForParticipant($this, $participant);
         }
+
+        $pivot = ParticipantPivot::withTrashed()->where([
+            'meeting_id' => $this->getKey(),
+            'participant_id' => $participant->getKey(),
+            'participant_type' => get_class($participant),
+        ])->first();
+
+        if ($pivot) {
+            $this->instance->participantAdding($participant, $this, $pivot->uuid);
+            $pivot->restore();
+            $this->instance->participantAdded($pivot);
+
+            return $pivot;
+        }
         
         $this->instance->participantAdding($participant, $this, $uuid = \Illuminate\Support\Str::uuid());
 

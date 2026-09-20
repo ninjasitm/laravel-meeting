@@ -3,6 +3,7 @@
 namespace Nncodes\Meeting\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Nncodes\MetaAttributes\MetaAttributesServiceProvider;
 use Nncodes\Meeting\MeetingServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -23,6 +24,7 @@ class TestCase extends Orchestra
     {
         return [
             MeetingServiceProvider::class,
+            MetaAttributesServiceProvider::class,
         ];
     }
 
@@ -35,9 +37,9 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-        /*
         include_once __DIR__.'/../database/migrations/create_meetings_table.php.stub';
-        (new \CreatePackageTable())->up();
-        */
+        (new \CreateMeetingsTable())->up();
+        include_once __DIR__.'/../vendor/nncodes/laravel-meta-attributes/database/migrations/create_meta_attributes_table.php.stub';
+        (new \CreateMetaAttributesTable())->up();
     }
 }

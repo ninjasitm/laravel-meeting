@@ -50,7 +50,7 @@ class MeetingServiceProvider extends ServiceProvider
         $this->app->singleton(Providers\Zoom\Sdk\Zoom::class, function () {
             $jwtToken = config('meeting.providers.zoom.jwt_token');
 
-            return new Providers\Zoom\Sdk\Zoom($jwtToken);
+            return new Providers\Zoom\Sdk\Zoom($jwtToken ?? '');
         });
 
         foreach (config('meeting.providers', []) as $key => $target) {

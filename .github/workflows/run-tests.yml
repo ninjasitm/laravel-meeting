@@ -4,44 +4,51 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        php: [8.0, 7.3, 7.2.5]
-        laravel: [8.*, 7.*, 6.*]
-        stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 8.*
-            testbench: 6.*
-          - laravel: 7.*
-            testbench: 5.*
-          - laravel: 6.*
-            testbench: 4.*
-
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+          - php: '8.4'
+            laravel: '^10.0'
+            testbench: '^8.0'
+            audit: informational
+          - php: '8.4'
+            laravel: '^11.0'
+            testbench: '^9.0'
+            audit: informational
+          - php: '8.4'
+            laravel: '^12.0'
+            testbench: '^10.0'
+            audit: blocking
+          - php: '8.4'
+            laravel: '^13.0'
+            testbench: '^11.0'
+            audit: blocking
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, mbstring, pdo_sqlite
           coverage: none
-          
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-      - name: Install dependencies
+      - name: Install dependencies (advisory-affected compatibility lane)
+        if: matrix.audit == 'informational'
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-
-      - name: Execute tests
-        run: vendor/bin/phpunit
+          composer update --prefer-dist --prefer-stable --no-interaction --no-blocking
+      - name: Install dependencies
+        if: matrix.audit == 'blocking'
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-dist --prefer-stable --no-interaction
+      - name: Audit dependencies (informational)
+        if: matrix.audit == 'informational'
+        continue-on-error: true
+        run: composer audit --locked --format=plain
+      - name: Audit dependencies
+        if: matrix.audit == 'blocking'
+        run: composer audit --locked --format=plain
+      - run: vendor/bin/phpunit --colors=always

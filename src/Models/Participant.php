@@ -5,11 +5,13 @@ namespace Nncodes\Meeting\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Nncodes\MetaAttributes\Concerns\HasMetaAttributes;
 
 class Participant extends MorphPivot
 {
     use HasMetaAttributes;
+    use SoftDeletes;
 
     /**
      * The table associated with the model.

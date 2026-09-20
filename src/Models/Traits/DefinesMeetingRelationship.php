@@ -52,6 +52,7 @@ trait DefinesMeetingRelationship
     {
         return $this->morphedByMany($modelType, 'participant', 'meeting_participants')
                     ->using(Participant::class)
+                    ->wherePivotNull('deleted_at')
                     ->withPivot(['uuid', 'started_at', 'ended_at'])
                     ->withTimestamps();
     }
