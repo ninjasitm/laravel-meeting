@@ -75,11 +75,11 @@ trait ManagesGroups
     public function groupMembers(string $groupId, array $query = []): Repository
     {
         $request = function ($query, $paginator) use ($groupId) {
-          return $this->transformCollection(
-            $this->get("groups/{$groupId}/members?" . http_build_query($query)),
-            [User::class, 'members'],
-            $paginator
-          );
+            return $this->transformCollection(
+                $this->get("groups/{$groupId}/members?" . http_build_query($query)),
+                [User::class, 'members'],
+                $paginator
+            );
         };
 
         return $request($query, $request);

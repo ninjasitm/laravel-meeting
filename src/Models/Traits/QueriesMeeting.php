@@ -52,7 +52,7 @@ trait QueriesMeeting
             'scheduler',
             get_class($scheduler),
             function (Builder $query) use ($scheduler) {
-              return $query->where('id', $scheduler->id);
+                return $query->where('id', $scheduler->id);
             }
         );
     }
@@ -70,7 +70,7 @@ trait QueriesMeeting
             'presenter',
             get_class($presenter),
             function (Builder $query) use ($presenter) {
-              return $query->where('id', $presenter->id);
+                return $query->where('id', $presenter->id);
             }
         );
     }
@@ -88,7 +88,7 @@ trait QueriesMeeting
             'host',
             get_class($host),
             function (Builder $query) use ($host) {
-              return $query->where('id', $host->id);
+                return $query->where('id', $host->id);
             }
         );
     }
@@ -105,9 +105,9 @@ trait QueriesMeeting
         return $query->whereHas(
             'participantsPivot',
             function (Builder $query) use ($participant) {
-              return $query->where([
-                'participant_id' => $participant->id,
-              ]);
+                return $query->where([
+                  'participant_id' => $participant->id,
+                ]);
             }
         );
     }

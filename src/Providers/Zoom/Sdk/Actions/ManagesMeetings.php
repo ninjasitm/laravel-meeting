@@ -69,11 +69,11 @@ trait ManagesMeetings
     public function meetingParticipants(int $meetingId, array $query = []): Repository
     {
         $request = function ($query, $paginator) use ($meetingId) {
-          return $this->transformCollection(
-            $this->get("meetings/{$meetingId}/registrants?" . http_build_query($query)),
-            [MeetingParticipant::class, 'registrants'],
-            $paginator
-          );
+            return $this->transformCollection(
+                $this->get("meetings/{$meetingId}/registrants?" . http_build_query($query)),
+                [MeetingParticipant::class, 'registrants'],
+                $paginator
+            );
         };
 
         return $request($query, $request);

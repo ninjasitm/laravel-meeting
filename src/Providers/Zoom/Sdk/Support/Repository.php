@@ -9,9 +9,9 @@ use ReflectionClass;
 class Repository
 {
 
-     /**
-     * @var \Illuminate\Support\Collection
-     */
+    /**
+    * @var \Illuminate\Support\Collection
+    */
     protected Collection $collection;
 
     /**

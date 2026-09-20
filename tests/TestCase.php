@@ -3,8 +3,8 @@
 namespace Nncodes\Meeting\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Nncodes\MetaAttributes\MetaAttributesServiceProvider;
 use Nncodes\Meeting\MeetingServiceProvider;
+use Nncodes\MetaAttributes\MetaAttributesServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -15,7 +15,7 @@ class TestCase extends Orchestra
 
         Factory::guessFactoryNamesUsing(
             function (string $modelName) {
-              return 'Nncodes\\Meeting\\Database\\Factories\\'.class_basename($modelName).'Factory';
+                return 'Nncodes\\Meeting\\Database\\Factories\\'.class_basename($modelName).'Factory';
             }
         );
     }

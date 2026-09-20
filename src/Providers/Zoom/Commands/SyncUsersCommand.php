@@ -101,8 +101,8 @@ class SyncUsersCommand extends Command
             
             $this->table(
                 $headers,
-                $items->map(function($user) use ($tableKeys) {
-                  return $user->only($tableKeys);
+                $items->map(function ($user) use ($tableKeys) {
+                    return $user->only($tableKeys);
                 })->toArray()
             );
         }

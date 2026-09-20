@@ -63,11 +63,11 @@ trait ManagesRoles
     public function roleMembers(string $roleId, array $query = []): Repository
     {
         $request = function ($query, $paginator) use ($roleId) {
-          return $this->transformCollection(
-            $this->get("roles/{$roleId}/members?".http_build_query($query)),
-            [User::class, 'members'],
-            $paginator
-          );
+            return $this->transformCollection(
+                $this->get("roles/{$roleId}/members?".http_build_query($query)),
+                [User::class, 'members'],
+                $paginator
+            );
         };
 
         return $request($query, $request);

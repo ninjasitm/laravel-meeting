@@ -18,8 +18,8 @@ use Nncodes\Meeting\Contracts\Participant as ParticipantContract;
 use Nncodes\Meeting\Contracts\Presenter;
 use Nncodes\Meeting\Contracts\Provider;
 use Nncodes\Meeting\Contracts\Scheduler;
-use Nncodes\Meeting\Events\MeetingScheduled;
 use Nncodes\Meeting\Events\MeetingCanceled;
+use Nncodes\Meeting\Events\MeetingScheduled;
 use Nncodes\Meeting\Events\MeetingUpdated;
 use Nncodes\Meeting\Events\ParticipantAdded;
 use Nncodes\Meeting\Events\ParticipationCanceled;
@@ -239,34 +239,150 @@ class MeetingCharacterizationTest extends TestCase
     }
 }
 
-class TestScheduler extends Model implements Scheduler { use SchedulesMeetings; protected $table = 'actors'; public $timestamps = false; protected $guarded = []; }
-class TestPresenter extends Model implements Presenter { use PresentsMeetings; protected $table = 'actors'; public $timestamps = false; protected $guarded = []; }
-class TestHost extends Model implements Host { use HostsMeetings; protected $table = 'actors'; public $timestamps = false; protected $guarded = []; }
-class TestParticipant extends Model implements ParticipantContract { use JoinsMeetings; protected $table = 'meeting_test_participants'; public $timestamps = false; protected $guarded = []; public function getParticipantEmailAddress(): string { return $this->email; } public function getParticipantFirstName(): string { return 'Test'; } public function getParticipantLastName(): string { return 'Participant'; } }
+class TestScheduler extends Model implements Scheduler
+{
+    use SchedulesMeetings;
+    protected $table = 'actors';
+    public $timestamps = false;
+    protected $guarded = [];
+}
+class TestPresenter extends Model implements Presenter
+{
+    use PresentsMeetings;
+    protected $table = 'actors';
+    public $timestamps = false;
+    protected $guarded = [];
+}
+class TestHost extends Model implements Host
+{
+    use HostsMeetings;
+    protected $table = 'actors';
+    public $timestamps = false;
+    protected $guarded = [];
+}
+class TestParticipant extends Model implements ParticipantContract
+{
+    use JoinsMeetings;
+    protected $table = 'meeting_test_participants';
+    public $timestamps = false;
+    protected $guarded = [];
+
+    public function getParticipantEmailAddress(): string
+    {
+        return $this->email;
+    }
+
+    public function getParticipantFirstName(): string
+    {
+        return 'Test';
+    }
+
+    public function getParticipantLastName(): string
+    {
+        return 'Participant';
+    }
+}
 
 class FakeProvider implements Provider
 {
-    public function getFacadeAccessor(): string { return 'fake'; }
-    public function scheduling(MeetingAdder $meeting): void {}
-    public function scheduled(Meeting $meeting): void { event(new MeetingScheduled($meeting)); }
-    public function updating(Meeting $meeting): void {}
-    public function updated(Meeting $meeting): void { event(new MeetingUpdated($meeting)); }
-    public function starting(Meeting $meeting): void {}
-    public function started(Meeting $meeting): void {}
-    public function ending(Meeting $meeting): void {}
-    public function ended(Meeting $meeting): void {}
-    public function canceling(Meeting $meeting): void {}
-    public function canceled(Meeting $meeting): void { event(new MeetingCanceled($meeting)); }
-    public function participantAdding(ParticipantContract $participant, Meeting $meeting, string $uuid): void { $meeting->setMeta($uuid)->asObject((object) ['registrantId' => 'registrant-1', 'joinUrl' => 'https://zoom.test/join']); }
-    public function participantAdded(Participant $participant): void { $pending = $participant->meeting->getMeta($participant->uuid); $participant->setMeta('registrantId')->asString($pending->value->registrantId); $participant->setMeta('joinUrl')->asString($pending->value->joinUrl); $participant->setMeta('email')->asString($participant->participant->getParticipantEmailAddress()); $pending->delete(); event(new ParticipantAdded($participant)); }
-    public function participationCanceling(Participant $participant): void { $participant->clearMetas(); }
-    public function participationCanceled(Participant $participant): void { event(new ParticipationCanceled($participant)); }
-    public function participantJoining(Participant $participant): void {}
-    public function participantJoined(Participant $participant): void {}
-    public function participantLeaving(Participant $participant): void {}
-    public function participantLeft(Participant $participant): void {}
-    public function getPresenterAccess(Meeting $meeting) { return null; }
-    public function getParticipantAccess(Meeting $meeting, ParticipantContract $participant) { return null; }
+    public function getFacadeAccessor(): string
+    {
+        return 'fake';
+    }
+
+    public function scheduling(MeetingAdder $meeting): void
+    {
+    }
+
+    public function scheduled(Meeting $meeting): void
+    {
+        event(new MeetingScheduled($meeting));
+    }
+
+    public function updating(Meeting $meeting): void
+    {
+    }
+
+    public function updated(Meeting $meeting): void
+    {
+        event(new MeetingUpdated($meeting));
+    }
+
+    public function starting(Meeting $meeting): void
+    {
+    }
+
+    public function started(Meeting $meeting): void
+    {
+    }
+
+    public function ending(Meeting $meeting): void
+    {
+    }
+
+    public function ended(Meeting $meeting): void
+    {
+    }
+
+    public function canceling(Meeting $meeting): void
+    {
+    }
+
+    public function canceled(Meeting $meeting): void
+    {
+        event(new MeetingCanceled($meeting));
+    }
+
+    public function participantAdding(ParticipantContract $participant, Meeting $meeting, string $uuid): void
+    {
+        $meeting->setMeta($uuid)->asObject((object) ['registrantId' => 'registrant-1', 'joinUrl' => 'https://zoom.test/join']);
+    }
+
+    public function participantAdded(Participant $participant): void
+    {
+        $pending = $participant->meeting->getMeta($participant->uuid);
+        $participant->setMeta('registrantId')->asString($pending->value->registrantId);
+        $participant->setMeta('joinUrl')->asString($pending->value->joinUrl);
+        $participant->setMeta('email')->asString($participant->participant->getParticipantEmailAddress());
+        $pending->delete();
+        event(new ParticipantAdded($participant));
+    }
+
+    public function participationCanceling(Participant $participant): void
+    {
+        $participant->clearMetas();
+    }
+
+    public function participationCanceled(Participant $participant): void
+    {
+        event(new ParticipationCanceled($participant));
+    }
+
+    public function participantJoining(Participant $participant): void
+    {
+    }
+
+    public function participantJoined(Participant $participant): void
+    {
+    }
+
+    public function participantLeaving(Participant $participant): void
+    {
+    }
+
+    public function participantLeft(Participant $participant): void
+    {
+    }
+
+    public function getPresenterAccess(Meeting $meeting)
+    {
+        return null;
+    }
+
+    public function getParticipantAccess(Meeting $meeting, ParticipantContract $participant)
+    {
+        return null;
+    }
 }
 
 class RecordingZoom extends Zoom
@@ -277,10 +393,40 @@ class RecordingZoom extends Zoom
     public array $participantStatuses = [];
     public array $participantsAdded = [];
 
-    public function __construct() {}
-    public function createUserMeeting(string $userId, array $data): ZoomMeeting { $this->created[] = compact('userId', 'data'); return new ZoomMeeting(['id' => 7000 + count($this->created)], $this); }
-    public function updateMeeting(int $meetingId, array $data, array $query = []): void { $this->updated[] = ['id' => $meetingId, 'data' => $data]; }
-    public function deleteMeeting(int $meetingId, array $query = []): void { $this->deleted[] = $meetingId; }
-    public function addMeetingParticipant(int $meetingId, array $data, array $query = []): MeetingParticipant { $this->participantsAdded[] = ['id' => $meetingId, 'data' => $data]; $number = count($this->participantsAdded); $registrant = new MeetingParticipant(['email' => $data['email']], $this); $registrant->registrantId = "registrant-{$number}"; $registrant->joinUrl = "https://zoom.test/join/{$number}"; return $registrant; }
-    public function updateMeetingParticipantStatus(int $meetingId, array $data, array $query = []): void { $this->participantStatuses[] = ['id' => $meetingId, 'data' => $data]; }
+    public function __construct()
+    {
+    }
+
+    public function createUserMeeting(string $userId, array $data): ZoomMeeting
+    {
+        $this->created[] = compact('userId', 'data');
+
+        return new ZoomMeeting(['id' => 7000 + count($this->created)], $this);
+    }
+
+    public function updateMeeting(int $meetingId, array $data, array $query = []): void
+    {
+        $this->updated[] = ['id' => $meetingId, 'data' => $data];
+    }
+
+    public function deleteMeeting(int $meetingId, array $query = []): void
+    {
+        $this->deleted[] = $meetingId;
+    }
+
+    public function addMeetingParticipant(int $meetingId, array $data, array $query = []): MeetingParticipant
+    {
+        $this->participantsAdded[] = ['id' => $meetingId, 'data' => $data];
+        $number = count($this->participantsAdded);
+        $registrant = new MeetingParticipant(['email' => $data['email']], $this);
+        $registrant->registrantId = "registrant-{$number}";
+        $registrant->joinUrl = "https://zoom.test/join/{$number}";
+
+        return $registrant;
+    }
+
+    public function updateMeetingParticipantStatus(int $meetingId, array $data, array $query = []): void
+    {
+        $this->participantStatuses[] = ['id' => $meetingId, 'data' => $data];
+    }
 }

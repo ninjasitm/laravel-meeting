@@ -30,11 +30,11 @@ trait ManagesAccounts
     public function accountMeetingRecordings(string $accountId, array $query = []): Repository
     {
         $request = function ($query, $paginator) use ($accountId) {
-          return $this->transformCollection(
-            $this->get("accounts/{$accountId}/recordings?" . http_build_query($query)),
-            [CloudRecording::class, 'meetings'],
-            $paginator
-          );
+            return $this->transformCollection(
+                $this->get("accounts/{$accountId}/recordings?" . http_build_query($query)),
+                [CloudRecording::class, 'meetings'],
+                $paginator
+            );
         };
 
         return $request($query, $request);

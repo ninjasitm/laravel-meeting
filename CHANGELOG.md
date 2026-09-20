@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-zoom-meeting` will be documented in this file.
 
+## 1.2.1 - Unreleased
+
+- Modernize PHP CS Fixer configuration and workflow compatibility with PHP CS Fixer 3.95.25.
+
 ## 1.2.0 - Unreleased
 
 - Add PHP 8.4 and Laravel 11, 12, and 13 compatibility coverage.
