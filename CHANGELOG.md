@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-zoom-meeting` will be documented in this file.
 
+## 1.2.2 - Unreleased
+
+- Make styling CI deterministic and read-only by running PHP CS Fixer without its cache or auto-commit step.
+
 ## 1.2.1 - Unreleased
 
 - Modernize PHP CS Fixer configuration and workflow compatibility with PHP CS Fixer 3.95.25.
